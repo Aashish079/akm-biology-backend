@@ -1,0 +1,14 @@
+fastapi
+uvicorn
+pydantic
+pydantic-settings
+sqlalchemy
+alembic
+python-multipart
+python-jose[cryptography]
+passlib==1.7.4
+bcrypt==3.2.2
+email-validator
+fastapi-mail
+structlog
+asyncpg

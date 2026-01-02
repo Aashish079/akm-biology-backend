@@ -3,6 +3,8 @@ from app.core.config import settings
 from app.core.logging import configure_logging, get_logger
 from app.core.middleware import configure_middleware
 from contextlib import asynccontextmanager
+from app.api.v1.api import api_router
+from app.core.database import Base, engine
 
 
 configure_logging()
@@ -13,6 +15,9 @@ logger = get_logger(__name__)
 async def lifespan(app: FastAPI):
     # Startup
     logger.info("Starting AKM SIR BIO API", version=settings.version)
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+    logger.info("Database tables created")
     yield
     # Shutdown
     logger.info("Shutting down AKM SIR BIO API")
@@ -29,6 +34,7 @@ app = FastAPI(
 )
 
 configure_middleware(app)
+app.include_router(api_router, prefix=settings.api_v1_prefix)
 
 @app.get("/", tags=["root"])
 async def root():

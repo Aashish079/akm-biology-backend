@@ -1,6 +1,6 @@
 from typing import List, Optional
 from pydantic_settings import BaseSettings
-from pydantic import validator
+from pydantic import validator, AnyHttpUrl, EmailStr
 
 class Settings(BaseSettings):
 
@@ -30,6 +30,31 @@ class Settings(BaseSettings):
     log_level: str = "INFO"
     log_format: str = "json"
 
+    # Database Configuration
+    database_url: str
+
+    # Security Configuration
+    secret_key: str
+    algorithm: str = "HS256"
+    access_token_expire_minutes: int = 30
+
+
+    #Admin Configuration
+    admin_email: EmailStr
+    admin_password: str
+
+    # Email Configuration
+    mail_username: str
+    mail_password: str
+    mail_from: EmailStr
+    mail_port: int = 587
+    mail_server: str
+    mail_from_name: str = "AKM SIR BIOLOGY"
+    mail_starttls: bool = True
+    mail_ssl_tls: bool = False
+    use_credentials: bool = True
+    validate_certs: bool = True
+
     @validator("allowed_origins", pre=True)
     def assemble_cors_origins(cls, v: str | List[str]) -> List[str]:
         if isinstance(v, str):
@@ -45,6 +70,7 @@ class Settings(BaseSettings):
     class Config:
         env_file = ".env"
         case_sensitive = False
+        extra = "ignore"
 
 settings = Settings()
 
