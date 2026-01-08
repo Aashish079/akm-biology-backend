@@ -55,6 +55,13 @@ class Settings(BaseSettings):
     use_credentials: bool = True
     validate_certs: bool = True
 
+    # AWS Configuration
+    aws_access_key_id: Optional[str] = None
+    aws_secret_access_key: Optional[str] = None
+    aws_region: str = "us-east-1"
+    s3_bucket_name: Optional[str] = None
+    cloudfront_domain: Optional[str] = None
+
     @validator("allowed_origins", pre=True)
     def assemble_cors_origins(cls, v: str | List[str]) -> List[str]:
         if isinstance(v, str):

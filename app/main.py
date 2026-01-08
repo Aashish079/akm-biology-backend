@@ -1,4 +1,6 @@
+import os
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 from app.core.config import settings
 from app.core.logging import configure_logging, get_logger
 from app.core.middleware import configure_middleware
@@ -35,8 +37,10 @@ app = FastAPI(
 
 configure_middleware(app)
 app.include_router(api_router, prefix=settings.api_v1_prefix)
+os.makedirs("uploads", exist_ok=True)
+app.mount(f"{settings.api_v1_prefix}/static", StaticFiles(directory="uploads"), name="static")
 
-@app.get("/", tags=["root"])
+@app.get(f"{settings.api_v1_prefix}/", tags=["root"])
 async def root():
     return{
         "message":"AKM SIR BIO API",

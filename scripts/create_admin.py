@@ -1,4 +1,10 @@
 import asyncio
+import sys
+import os
+
+# Add the parent directory to sys.path
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from sqlalchemy import select
 from app.core.database import AsyncSessionLocal, Base, engine
 from app.models.user import User, UserRole

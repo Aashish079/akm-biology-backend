@@ -12,3 +12,4 @@ email-validator
 fastapi-mail
 structlog
 asyncpg
+boto3

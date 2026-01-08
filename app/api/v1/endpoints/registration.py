@@ -1,17 +1,19 @@
 from typing import Any
-from fastapi import APIRouter, Depends, HTTPException, File, UploadFile, Form
+from fastapi import APIRouter, Depends, HTTPException, File, UploadFile, Form, BackgroundTasks
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
 from app.core import security
 from app.api import deps
 from app.services.storage import storage_service
+from app.services.email import send_registration_received_email
 from app.models import user as models
 
 router = APIRouter()
 
 @router.post("/register")
 async def register_student(
+    background_tasks: BackgroundTasks,
     first_name: str = Form(...),
     last_name: str = Form(...),
     email: str = Form(...),
@@ -61,5 +63,8 @@ async def register_student(
     )
     db.add(proof)
     await db.commit()
+    
+    # Send Registration Received Email
+    background_tasks.add_task(send_registration_received_email, email, f"{first_name} {last_name}")
     
     return {"message": "Registration successful. Please wait for admin approval."}

@@ -25,3 +25,8 @@ htmlcov/
 
 # Database (if local)
 *.sqlite3
+
+
+# Static files
+uploads/
+

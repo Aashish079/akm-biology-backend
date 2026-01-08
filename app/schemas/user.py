@@ -16,11 +16,21 @@ class PasswordChange(BaseModel):
     old_password: str
     new_password: str
 
+
+class PaymentProofResponse(BaseModel):
+    id: UUID
+    file_path: str
+    status: str
+    
+    class Config:
+        from_attributes = True
+
 class UserResponse(UserBase):
     id: UUID
     is_active: bool
     role: str
     must_change_password: bool
+    payment_proof: Optional[PaymentProofResponse] = None
 
     class Config:
         from_attributes = True
@@ -39,3 +49,4 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     email: Optional[str] = None
+    sub: Optional[str] = None
